@@ -3,6 +3,11 @@ package edu.westga.cs.babble.controllers;
 import edu.westga.cs.babble.model.PlayedWord;
 import edu.westga.cs.babble.model.TileBag;
 import edu.westga.cs.babble.model.TileRack;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.util.converter.NumberStringConverter;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -13,6 +18,7 @@ public class BabbleController {
 	private TileBag tileBag;
 	private TileRack tileRack;
 	private WordDictionary dictionary;
+	private IntegerProperty forceInteger;
 	
 	@FXML
 	private Button reset;
@@ -37,6 +43,10 @@ public class BabbleController {
 	}
 	
 	public void startGame() {
-		
+		this.playerScore();
+	}
+	
+	private void playerScore() {
+		this.playerScore.textProperty().bindBidirectional(this.forceInteger, new NumberStringConverter());
 	}
 }
