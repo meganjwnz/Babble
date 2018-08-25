@@ -1,7 +1,5 @@
 package edu.westga.cs.babble.model;
 
-import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
