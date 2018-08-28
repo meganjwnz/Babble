@@ -3,6 +3,7 @@ package edu.westga.cs.babble.controllers;
 import javafx.util.Callback;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import edu.westga.cs.babble.model.EmptyTileBagException;
 import edu.westga.cs.babble.model.PlayedWord;
 import edu.westga.cs.babble.model.Tile;
@@ -14,8 +15,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.converter.NumberStringConverter;
 import javafx.fxml.*;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.util.StringConverter;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.Callback;
@@ -101,44 +103,50 @@ public class BabbleController {
 	public void playableTiles() {
 		this.randomTiles.setItems(this.tileRack.tiles());
 		this.randomTiles.setCellFactory(new TileManager());
-		this.randomTiles.setOnMouseClicked(new EventHandler() {
-
-			@Override
-			public void handle(Event event) {
-				Tile selection = (Tile) BabbleController.this.randomTiles.getSelectionModel().getSelectedItem();
-				try {
-					BabbleController.this.tileRack.remove(selection);
-					BabbleController.this.word.append(selection);
-				} catch (TileNotInGroupException e) {
-					e.printStackTrace();
-				}
+		this.randomTiles.setOnMouseClicked(event -> {
+			Tile selection = (Tile) BabbleController.this.randomTiles.getSelectionModel().getSelectedItem();
+			try {
+				BabbleController.this.tileRack.remove(selection);
+				BabbleController.this.word.append(selection);
+			} catch (TileNotInGroupException tnige) {
+				tnige.printStackTrace();
 			}
 		});
-
 	}
 
+	
 	public void displaySelection() {
 		this.playedTiles.setItems(this.word.tiles());
 		this.playedTiles.setCellFactory(new TileManager());
-		this.randomTiles.setOnMouseClicked(new EventHandler() {
-
-			@Override
-			public void handle(Event event) {
-				Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
-				if (selection == null) {
-					return;
-				}
-				try {
-					BabbleController.this.word.remove(selection);
-					BabbleController.this.tileRack.append(selection);
-				} catch (TileNotInGroupException tnig) {
-					tnig.printStackTrace();
-				}
+		this.randomTiles.setOnMouseClicked(event -> {
+			final Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
+			if (selection == null) {
+				return;
+			}
+			try {
+				BabbleController.this.word.remove(selection);
+				BabbleController.this.tileRack.append(selection);
+			} catch (final TileNotInGroupException tnig) {
+				tnig.printStackTrace();
 			}
 		});
 	}
-	
+
 	public void clear() {
 		this.word.clear();
+	}
+
+	public void resetTiles() {
+		reset.setOnMouseClicked(event -> {
+			List<Tile> letters = new ArrayList<Tile>(BabbleController.this.word.tiles());
+			for (Tile letter : letters) {
+				try {
+					BabbleController.this.word.remove(letter);
+				} catch (TileNotInGroupException tnige) {
+					tnige.printStackTrace();
+				}
+				BabbleController.this.tileRack.append(letter);
+			}
+		});
 	}
 }
