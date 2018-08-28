@@ -9,15 +9,15 @@
 
 <AnchorPane prefHeight="228.0" prefWidth="306.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs.babble.controllers.BabbleController">
    <children>
-      <Button fx:id="reset" layoutX="153.0" layoutY="142.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="54.0" text="Reset" AnchorPane.rightAnchor="99.0" />
+      <Button fx:id="reset" layoutX="153.0" layoutY="142.0" mnemonicParsing="false" onAction="#clear" prefHeight="25.0" prefWidth="54.0" text="Reset" AnchorPane.rightAnchor="99.0" />
       <Button fx:id="playWord" layoutX="212.0" layoutY="142.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="79.0" text="Play Word" AnchorPane.rightAnchor="14.800000000000011" />
-      <ListView fx:id="randomTiles" editable="true" layoutX="3.0" layoutY="27.0" onMouseClicked="#displaySelection" orientation="HORIZONTAL" prefHeight="35.0" prefWidth="290.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+      <ListView fx:id="randomTiles" layoutX="3.0" layoutY="27.0" onMouseClicked="#playableTiles" orientation="HORIZONTAL" prefHeight="35.0" prefWidth="290.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
          <effect>
             <Glow />
          </effect>
       </ListView>
       <Label layoutX="12.0" layoutY="14.0" prefHeight="17.0" prefWidth="33.0" text="Tiles" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0" />
-      <ListView fx:id="playedTiles" editable="true" layoutY="98.0" orientation="HORIZONTAL" prefHeight="35.0" prefWidth="290.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="98.0">
+      <ListView fx:id="playedTiles" layoutY="98.0" onMouseClicked="#displaySelection" orientation="HORIZONTAL" prefHeight="35.0" prefWidth="290.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="98.0">
          <effect>
             <Glow />
          </effect>

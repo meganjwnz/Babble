@@ -81,26 +81,24 @@ public class BabbleController {
 	private class TileManager implements Callback<ListView<Tile>, ListCell<Tile>> {
 		public ListCell<Tile> call(ListView<Tile> listView) {
 			TextFieldListCell<Tile> cellFactory = new TextFieldListCell();
-			cellFactory.setConverter(new StringConverter() {
-				
+			cellFactory.setConverter(new StringConverter<Tile>() {
 				@Override
-				public String toString(Object tile) {
-					String letter = ((Tile) tile).getLetter() + "";
+				public String toString(Tile tile) {
+					String letter = tile.getLetter() + "";
 					return letter;
 				}
 
 				@Override
-				public Object fromString(String string) {
+				public Tile fromString(String string) {
 					return null;
 				}
-				
+
 			});
 			return cellFactory;
 		}
 	}
 
-	// Adds tiles to the List View
-	private void playableTiles() {
+	public void playableTiles() {
 		this.randomTiles.setItems(this.tileRack.tiles());
 		this.randomTiles.setCellFactory(new TileManager());
 		this.randomTiles.setOnMouseClicked(new EventHandler() {
@@ -119,9 +117,28 @@ public class BabbleController {
 
 	}
 
-	// Adds tiles to play area
-	public void displaySelection(MouseEvent event) {
+	public void displaySelection() {
 		this.playedTiles.setItems(this.word.tiles());
-		Tile letter = (Tile) this.randomTiles.getSelectionModel().getSelectedItem();
+		this.playedTiles.setCellFactory(new TileManager());
+		this.randomTiles.setOnMouseClicked(new EventHandler() {
+
+			@Override
+			public void handle(Event event) {
+				Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
+				if (selection == null) {
+					return;
+				}
+				try {
+					BabbleController.this.word.remove(selection);
+					BabbleController.this.tileRack.append(selection);
+				} catch (TileNotInGroupException tnig) {
+					tnig.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public void clear() {
+		this.word.clear();
 	}
 }
