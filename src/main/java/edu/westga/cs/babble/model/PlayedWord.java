@@ -23,7 +23,7 @@ public class PlayedWord extends TileGroup {
 	 */
 	public int getScore() {
 		int score = 0;
-		for(Tile t: super.tiles()) {
+		for (Tile t : super.tiles()) {
 			score += t.getPointValue();
 		}
 		return score;
