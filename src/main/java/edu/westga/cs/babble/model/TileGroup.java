@@ -27,7 +27,7 @@ public abstract class TileGroup {
 	 * @param tile the Tile to append
 	 */
 	public void append(Tile tile) {
-		if(tile==null) {
+		if (tile == null) {
 			throw new IllegalArgumentException("tile cannot be null");
 		}
 		
@@ -60,7 +60,7 @@ public abstract class TileGroup {
 	 */
 	public String getHand() {
 		String s = "";
-		for(Tile t: this.tiles) {
+		for (Tile t: this.tiles) {
 			s += t.getLetter();
 		}
 		return s;
