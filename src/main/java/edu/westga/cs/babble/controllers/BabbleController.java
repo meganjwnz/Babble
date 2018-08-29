@@ -22,6 +22,11 @@ import javafx.util.StringConverter;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.Callback;
 
+/**
+ * Controls all functions of Babble application linked to BabbleGui.fmxl
+ * @author Megan Brown
+ * @version 8/15/18
+ */
 public class BabbleController {
 
 	private PlayedWord word;
@@ -30,21 +35,21 @@ public class BabbleController {
 	private WordDictionary dictionary;
 	private IntegerProperty forceInteger;
 
+	//Derived from FXML document
 	@FXML
 	private Button reset;
-
 	@FXML
 	private Button playWord;
-
 	@FXML
 	private ListView randomTiles;
-
 	@FXML
 	private ListView playedTiles;
-
 	@FXML
 	private TextField playerScore;
 
+	/**
+	 * Initializes various Babble objects
+	 */
 	public BabbleController() {
 		this.word = new PlayedWord();
 		this.tileBag = new TileBag();
@@ -52,15 +57,22 @@ public class BabbleController {
 		this.dictionary = new WordDictionary();
 		this.forceInteger = new SimpleIntegerProperty(0);
 	}
-
+	
+	/**
+	 * Loads all functions of application
+	 */
 	public void initialize() {
 		this.createRandomTiles();
 		this.playableTiles();
 		this.displaySelection();
 		this.playerScoreResult();
-
+		this.playWord();
+		this.resetTiles();
 	}
 
+	/**
+	 * Forces the text to be integer only
+	 */
 	public void playerScoreResult() {
 		this.playerScore.textProperty().bindBidirectional(this.forceInteger, new NumberStringConverter());
 	}
@@ -86,8 +98,8 @@ public class BabbleController {
 	 * Displays the tiles added to the Your Word section
 	 */
 	public void displaySelection() {
-		this.playedTiles.setItems(this.word.tiles());
 		this.playedTiles.setCellFactory(new TileManager());
+		this.playedTiles.setItems(this.word.tiles());
 		this.playedTiles.setOnMouseClicked(event -> {
 			final Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
 			if (selection == null) {
@@ -101,32 +113,19 @@ public class BabbleController {
 			}
 		});
 	}
-
-	/**
-	 * Clears the word
-	 */
-	public void clear() {
-		this.word.clear();
-	}
-
+	
 	/**
 	 * Resets the tiles back to the rack
 	 */
 	public void resetTiles() {
-		this.reset.setOnMouseClicked(event -> {
-			List<Tile> letters = new ArrayList<Tile>(this.word.tiles());
-			for (Tile letter : letters) {
-				try {
-					this.word.remove(letter);
-				} catch (TileNotInGroupException tnige) {
-					tnige.printStackTrace();
-				}
-				this.tileRack.append(letter);
-			}
-		});
+		this.reset.setOnMouseClicked(event -> this.reset());
+	}
+	
+	public void playWord() {
+		this.playWord.setOnMouseClicked(event -> this.play());
 	}
 
-	// *************** helper methods ******************
+	// ********************** helper methods and classes **************************
 
 	/**
 	 * Generates random tiles
@@ -134,15 +133,16 @@ public class BabbleController {
 	 * @throws EmptyTileBagException
 	 */
 	private void createRandomTiles() {
-		for (int numberOfTilesInRack = 0; numberOfTilesInRack < this.tileRack.MAX_SIZE; numberOfTilesInRack++) {
+		int tilesNeeded = this.tileRack.getNumberOfTilesNeeded();
+		for (int numberOfTilesInRack = 0; numberOfTilesInRack < tilesNeeded; numberOfTilesInRack++) {
 			if (this.tileBag.isEmpty()) {
-				return;
+				break;
 			}
 			Tile tile = null;
 			try {
 				tile = this.tileBag.drawTile();
-			} catch (EmptyTileBagException e) {
-				e.printStackTrace();
+			} catch (EmptyTileBagException etbg) {
+				etbg.printStackTrace();
 			}
 			this.tileRack.append(tile);
 		}
@@ -164,14 +164,45 @@ public class BabbleController {
 					final String letter = tile.getLetter() + "";
 					return letter;
 				}
-
 				@Override
 				public Tile fromString(final String string) {
 					return null;
 				}
-
 			});
 			return cellFactory;
+		}
+	}
+	
+	/**
+	 * Action to play the word
+	 */
+	private void play() {
+		if (this.dictionary.isValidWord(this.word.getHand())) {
+			int wordScore = this.word.getScore();
+			int newScore = this.forceInteger.get();
+			newScore += wordScore;
+			this.forceInteger.set(newScore);
+			this.word.clear();
+			this.createRandomTiles();
+		} else {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.contentTextProperty().set("That is not a word!");
+			alert.showAndWait();
+		}
+	}
+	
+	/**
+	 * Action to reset the tiles
+	 */
+	private void reset() {
+		List<Tile> letters = new ArrayList<Tile>(this.word.tiles());
+		for (Tile letter : letters) {
+			try {
+				this.word.remove(letter);
+			} catch (TileNotInGroupException tnige) {
+				tnige.printStackTrace();
+			}
+			this.tileRack.append(letter);
 		}
 	}
 }

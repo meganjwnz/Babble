@@ -7,13 +7,14 @@ import pt.tumba.spell.SpellChecker;
 
 /**
  * Spell checker for words we attempt to make with Babble
+ * 
  * @author lewisb
  * @version Fall 2018
  */
 public class WordDictionary {
 
 	private SpellChecker checker;
-	
+
 	/**
 	 * Creates a new WordDictionary
 	 */
@@ -28,7 +29,7 @@ public class WordDictionary {
 			exc.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Determines if a word is a real word or not.
 	 * 
