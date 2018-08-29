@@ -6,5 +6,5 @@ package edu.westga.cs.babble.model;
  * @version 8/28/18
  */
 public class TestPlayedWordClear {
-
+	
 }
