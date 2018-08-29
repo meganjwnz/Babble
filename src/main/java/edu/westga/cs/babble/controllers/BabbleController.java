@@ -56,15 +56,83 @@ public class BabbleController {
 	public void initialize() {
 		this.createRandomTiles();
 		this.playableTiles();
+		this.displaySelection();
 		this.playerScoreResult();
+
 	}
 
-	// Binds score to Integer
 	public void playerScoreResult() {
 		this.playerScore.textProperty().bindBidirectional(this.forceInteger, new NumberStringConverter());
 	}
 
-	// Adds the maximum number of tiles to the tileRack
+	/**
+	 * Displays tiles that may be chosen to play
+	 */
+	public void playableTiles() {
+		this.randomTiles.setItems(this.tileRack.tiles());
+		this.randomTiles.setCellFactory(new TileManager());
+		this.randomTiles.setOnMouseClicked(event -> {
+			Tile selection = (Tile) BabbleController.this.randomTiles.getSelectionModel().getSelectedItem();
+			try {
+				this.tileRack.remove(selection);
+				this.word.append(selection);
+			} catch (TileNotInGroupException tnige) {
+				tnige.printStackTrace();
+			}
+		});
+	}
+
+	/**
+	 * Displays the tiles added to the Your Word section
+	 */
+	public void displaySelection() {
+		this.playedTiles.setItems(this.word.tiles());
+		this.playedTiles.setCellFactory(new TileManager());
+		this.playedTiles.setOnMouseClicked(event -> {
+			final Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
+			if (selection == null) {
+				return;
+			}
+			try {
+				this.word.remove(selection);
+				this.tileRack.append(selection);
+			} catch (final TileNotInGroupException tnig) {
+				tnig.printStackTrace();
+			}
+		});
+	}
+
+	/**
+	 * Clears the word
+	 */
+	public void clear() {
+		this.word.clear();
+	}
+
+	/**
+	 * Resets the tiles back to the rack
+	 */
+	public void resetTiles() {
+		this.reset.setOnMouseClicked(event -> {
+			List<Tile> letters = new ArrayList<Tile>(this.word.tiles());
+			for (Tile letter : letters) {
+				try {
+					this.word.remove(letter);
+				} catch (TileNotInGroupException tnige) {
+					tnige.printStackTrace();
+				}
+				this.tileRack.append(letter);
+			}
+		});
+	}
+
+	// *************** helper methods ******************
+
+	/**
+	 * Generates random tiles
+	 * 
+	 * @throws EmptyTileBagException
+	 */
 	private void createRandomTiles() {
 		for (int numberOfTilesInRack = 0; numberOfTilesInRack < this.tileRack.MAX_SIZE; numberOfTilesInRack++) {
 			if (this.tileBag.isEmpty()) {
@@ -73,80 +141,37 @@ public class BabbleController {
 			Tile tile = null;
 			try {
 				tile = this.tileBag.drawTile();
-			} catch (EmptyTileBagException etbe) {
-				etbe.printStackTrace();
+			} catch (EmptyTileBagException e) {
+				e.printStackTrace();
 			}
 			this.tileRack.append(tile);
 		}
 	}
 
+	/**
+	 * Manages the cell factory of the tiles. Converts tiles into string so that
+	 * they can be displayed in the list pane
+	 * 
+	 * @author Megan Brown
+	 *
+	 */
 	private class TileManager implements Callback<ListView<Tile>, ListCell<Tile>> {
 		public ListCell<Tile> call(ListView<Tile> listView) {
-			TextFieldListCell<Tile> cellFactory = new TextFieldListCell();
+			TextFieldListCell<Tile> cellFactory = new TextFieldListCell<Tile>();
 			cellFactory.setConverter(new StringConverter<Tile>() {
 				@Override
-				public String toString(Tile tile) {
-					String letter = tile.getLetter() + "";
+				public String toString(final Tile tile) {
+					final String letter = tile.getLetter() + "";
 					return letter;
 				}
 
 				@Override
-				public Tile fromString(String string) {
+				public Tile fromString(final String string) {
 					return null;
 				}
 
 			});
 			return cellFactory;
 		}
-	}
-
-	public void playableTiles() {
-		this.randomTiles.setItems(this.tileRack.tiles());
-		this.randomTiles.setCellFactory(new TileManager());
-		this.randomTiles.setOnMouseClicked(event -> {
-			Tile selection = (Tile) BabbleController.this.randomTiles.getSelectionModel().getSelectedItem();
-			try {
-				BabbleController.this.tileRack.remove(selection);
-				BabbleController.this.word.append(selection);
-			} catch (TileNotInGroupException tnige) {
-				tnige.printStackTrace();
-			}
-		});
-	}
-
-	
-	public void displaySelection() {
-		this.playedTiles.setItems(this.word.tiles());
-		this.playedTiles.setCellFactory(new TileManager());
-		this.randomTiles.setOnMouseClicked(event -> {
-			final Tile selection = (Tile) BabbleController.this.playedTiles.getSelectionModel().getSelectedItem();
-			if (selection == null) {
-				return;
-			}
-			try {
-				BabbleController.this.word.remove(selection);
-				BabbleController.this.tileRack.append(selection);
-			} catch (final TileNotInGroupException tnig) {
-				tnig.printStackTrace();
-			}
-		});
-	}
-
-	public void clear() {
-		this.word.clear();
-	}
-
-	public void resetTiles() {
-		reset.setOnMouseClicked(event -> {
-			List<Tile> letters = new ArrayList<Tile>(BabbleController.this.word.tiles());
-			for (Tile letter : letters) {
-				try {
-					BabbleController.this.word.remove(letter);
-				} catch (TileNotInGroupException tnige) {
-					tnige.printStackTrace();
-				}
-				BabbleController.this.tileRack.append(letter);
-			}
-		});
 	}
 }
