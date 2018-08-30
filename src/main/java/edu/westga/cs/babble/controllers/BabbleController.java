@@ -33,7 +33,6 @@ public class BabbleController {
 	private WordDictionary dictionary;
 	private IntegerProperty forceInteger;
 
-	// Derived from FXML document
 	@FXML
 	private Button reset;
 	@FXML
@@ -163,12 +162,13 @@ public class BabbleController {
 			cellFactory.setConverter(new StringConverter<Tile>() {
 				@Override
 				public String toString(final Tile tile) {
-					final String letter = tile.getLetter() + "";
+					String letter = tile.getLetter() + "";
+					cellFactory.setAccessibleText(letter);
 					return letter;
 				}
 
 				@Override
-				public Tile fromString(final String string) {
+				public Tile fromString(String string) {
 					return null;
 				}
 			});
@@ -216,6 +216,7 @@ public class BabbleController {
 	private void playedSelectionPopulator() {
 		Tile selection = (Tile) this.playedTiles.getSelectionModel().getSelectedItem();
 		if (selection == null) {
+			return;
 		}
 		try {
 			this.word.remove(selection);
