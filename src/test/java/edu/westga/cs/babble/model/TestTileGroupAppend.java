@@ -61,8 +61,8 @@ public class TestTileGroupAppend {
 		dummy.append(new Tile('E'));
 		dummy.append(new Tile('E'));
 		assertTrue(dummy.getHand().length() == 10);
-		for(Tile tiles : dummy.tiles()) {
-			 results += tiles.getLetter() + "";
+		for (Tile tiles : dummy.tiles()) {
+			results += tiles.getLetter() + "";
 		}
 		assertEquals("EAPQLMZOEE", results);
 		assertFalse(dummy.getHand().isEmpty());
@@ -71,7 +71,6 @@ public class TestTileGroupAppend {
 	@Test
 	public void shouldHaveManyTilesIncludingDuplicatesInTileGroup() {
 		DummyGroup dummy = new DummyGroup();
-		TileBag tile = new TileBag();
 		String duplicateValues = "";
 		for (int i = 0; i < 15; i++) {
 			dummy.append(new Tile('E'));
@@ -85,20 +84,10 @@ public class TestTileGroupAppend {
 	@Test
 	public void canNotAddSameTileTwice() {
 		DummyGroup dummy = new DummyGroup();
-		TileBag tileBag = new TileBag();
 		Tile tile = new Tile('B');
 		assertThrows(IllegalArgumentException.class, () -> {
-			if (tile.getLetter() == 'B') {
-				dummy.append(tile);
-				dummy.append(tile);
-			}
-			assertTrue(dummy.getHand().length() == 12);
-			String duplicate = "";
-			while (!dummy.tiles().isEmpty()) {
-				for (int i = 0; i < dummy.getHand().length(); i++) {
-					duplicate += dummy.tiles().get(i).getLetter();
-				}
-			}
+			dummy.append(tile);
+			dummy.append(tile);
 		});
 	}
 }
