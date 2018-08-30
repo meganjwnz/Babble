@@ -126,7 +126,9 @@ public class BabbleController {
 		});
 	}
 
-	// ********************** helper methods and classes **************************
+	/**
+	 * ******************* helper methods and classes **************************
+	 */
 
 	/**
 	 * Generates random tiles
@@ -151,7 +153,7 @@ public class BabbleController {
 
 	/**
 	 * Manages the cell factory of the tiles. Converts tiles into string so that
-	 * they can be displayed in the list pane
+	 * they can be displayed in the listview
 	 * 
 	 * @author Megan Brown
 	 *
