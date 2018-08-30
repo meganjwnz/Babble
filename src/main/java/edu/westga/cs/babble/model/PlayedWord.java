@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 /**
  * A candidate word made up of tiles and their points
+ * 
  * @author lewisb
  *
  */
 public class PlayedWord extends TileGroup {
 
-	/** creates a new empty word
+	/**
+	 * creates a new empty word
 	 * 
 	 */
 	public PlayedWord() {
-		
+
 	}
-	
+
 	/**
 	 * Gets the total points of all Tiles in this Word.
 	 * 
@@ -28,9 +30,10 @@ public class PlayedWord extends TileGroup {
 		}
 		return score;
 	}
-	
+
 	/**
 	 * Check to see if this word's tiles can make the candidate text. Order matters.
+	 * 
 	 * @param text the candidate text
 	 * @return true if this word has the needed letters, false otherwise
 	 */
@@ -38,11 +41,11 @@ public class PlayedWord extends TileGroup {
 		if (text == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		if (text.isEmpty()) {
 			return false;
 		}
-		
+
 		return text.equals(super.getHand());
 	}
 
