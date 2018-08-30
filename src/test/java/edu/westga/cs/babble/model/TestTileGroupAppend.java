@@ -48,7 +48,6 @@ public class TestTileGroupAppend {
 	@Test
 	public void shouldHaveManyTilesInTileGroup() {
 		DummyGroup dummy = new DummyGroup();
-		TileBag tile = new TileBag();
 		String results = "";
 		dummy.append(new Tile('E'));
 		dummy.append(new Tile('A'));
