@@ -163,15 +163,15 @@ public class BabbleController {
 				@Override
 				public String toString(final Tile tile) {
 					String letter = tile.getLetter() + "";
+					cellFactory.setAccessibleText(letter);
 					return letter;
 				}
 
 				@Override
-				public Tile fromString(final String string) {
+				public Tile fromString(String string) {
 					return null;
 				}
 			});
-			cellFactory.setAccessibleText(cellFactory.toString());
 			return cellFactory;
 		}
 	}
